@@ -1,0 +1,13 @@
+Package: shinyi18nWidget
+Title: Create a Shiny i18n widget
+Version: 0.0.0.9000
+Authors@R: 
+    person("William","Amorim", ,"wamorim@curso-r.com", role = c("aut", "cre"))
+Description: Create a Shiny widget to use alongside with the `shiny.i18n` package.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports: 
+    glue,
+    htmltools
