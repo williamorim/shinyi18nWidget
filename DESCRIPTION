@@ -11,3 +11,5 @@ RoxygenNote: 7.3.2
 Imports: 
     glue,
     htmltools
+URL: https://github.com/williamorim/shinyi18nWidget
+BugReports: https://github.com/williamorim/shinyi18nWidget/issues
