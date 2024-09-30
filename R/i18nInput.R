@@ -1,18 +1,27 @@
 #' Create a i18nInput
-#' 
+#'
 #' Creates a widget to use alongside the shiny.i18n package.
-#' 
+#'
 #' @param inputId A character string.
 #' @param choices A character vector with language options.
-#' 
-#' @export 
-i18nInput <- function(inputId, choices) {
+#'
+#' @export
+i18nInput <- function(inputId, choices, selected = NULL) {
+
+  if (length(unique(choices)) != length(choices)) {
+    stop("choices must be unique")
+  }
+
+  if (is.null(selected)) {
+    selected <- choices[1]
+  }
+
   n <- length(choices)
   l <- htmltools::tagList()
 
   format_values <- names(choices)
   values <- as.character(choices)
-  
+
   if (is.null(format_values)) {
     format_values <- values
   }
@@ -21,22 +30,42 @@ i18nInput <- function(inputId, choices) {
 
   for (i in 1:n) {
     element <- htmltools::span(
-      class = "lang-option lang-active",
+      class = "lang-option",
       format_values[i],
-      onclick = glue::glue("Shiny.setInputValue('{inputId}', '{values[i]}')")
+      `data-value` = values[i]
     )
 
+    if (selected == values[i]) {
+      element <- htmltools::tagAppendAttributes(
+        element,
+        class = "lang-active"
+      )
+    }
+
     l <- htmltools::tagList(l, element)
-    
-    if(i != n) {
+
+    if (i != n) {
       l <- htmltools::tagList(l, sep)
     }
   }
 
-  js <- system.file("script.js", package = "shinyi18nWidget")
-
-  l <- htmltools::tagList(l, htmltools::tags$script(src = js))
+  l <- htmltools::div(
+    id = inputId,
+    class = "shiny-i18n-input",
+    l,
+    i18nInput_dependency()
+  )
 
   return(l)
 }
 
+i18nInput_dependency <- function() {
+  htmltools::htmlDependency(
+    name = "shinyi18nWidget",
+    version = "0.1.0",
+    src = "assets",
+    package = "shinyi18nWidget",
+    stylesheet = "style.css",
+    script = list(src = "script.js", defer = "")
+  )
+}
