@@ -34,6 +34,19 @@ $.extend(binding, {
 
   },
 
+  receiveMessage: function(el, data) {
+    if (data.hasOwnProperty("value")) {
+      var set = $(el).find(".lang-option");
+
+      $(set).each(function(i, e) {
+        if ($(e).data("value") == data.value) {
+          $(e).trigger("click")
+        }
+      })
+    }
+
+  }
+
 });
 
 Shiny.inputBindings.register(binding);

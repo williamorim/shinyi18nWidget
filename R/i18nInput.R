@@ -4,6 +4,7 @@
 #'
 #' @param inputId A character string.
 #' @param choices A character vector with language options.
+#' @param selected A character string with the selected language.
 #'
 #' @export
 i18nInput <- function(inputId, choices, selected = NULL) {
@@ -69,3 +70,16 @@ i18nInput_dependency <- function() {
     script = list(src = "script.js", defer = "")
   )
 }
+
+#' Update a i18nInput
+#'
+#' @param session A shiny session object.
+#' @param inputId A character string.
+#' @param selected A character string with the selected language.
+#'
+#' @export
+updateI18nInput <- function(session = getDefaultReactiveDomain(), inputId, selected = NULL) {
+  message <- list(value = selected)
+  session$sendInputMessage(inputId, message)
+}
+
