@@ -4,18 +4,34 @@
 #'
 #' @param inputId A character string.
 #' @param choices A character vector with language options.
+#' @param seleted A character string with the selected language.
 #'
 #' @export
 i18nInput <- function(inputId, choices, selected = NULL) {
-
   if (length(unique(choices)) != length(choices)) {
     stop("choices must be unique")
   }
-
   if (is.null(selected)) {
     selected <- choices[1]
   }
+  selected <- shiny::restoreInput(id = inputId, default = selected)
 
+  l <- htmltools::tagList()
+
+  html <- i18nOptions(choices, selected)
+
+  html <- htmltools::div(
+    id = inputId,
+    class = "shiny-input-container shiny-i18n-input",
+    html,
+    `data-value` = selected,
+    i18nInput_dependency()
+  )
+
+  return(html)
+}
+
+i18nOptions <- function(choices, selected) {
   n <- length(choices)
   l <- htmltools::tagList()
 
@@ -29,10 +45,10 @@ i18nInput <- function(inputId, choices, selected = NULL) {
   sep <- htmltools::span(" | ")
 
   for (i in 1:n) {
-    element <- htmltools::span(
+    element <- htmltools::tags$option(
       class = "lang-option",
       format_values[i],
-      `data-value` = values[i]
+      value = values[i]
     )
 
     if (selected == values[i]) {
@@ -48,14 +64,6 @@ i18nInput <- function(inputId, choices, selected = NULL) {
       l <- htmltools::tagList(l, sep)
     }
   }
-
-  l <- htmltools::div(
-    id = inputId,
-    class = "shiny-i18n-input",
-    l,
-    i18nInput_dependency()
-  )
-
   return(l)
 }
 
@@ -69,3 +77,22 @@ i18nInput_dependency <- function() {
     script = list(src = "script.js", defer = "")
   )
 }
+
+#' Update i18nInput
+#'
+#' This function updates the internationalization (i18n) input widget with new language options.
+#'
+#' @param session The Shiny session object.
+#' @param inputId A character string representing the ID of the input element.
+#' @param selected A character string with the selected language.
+#'
+#' @return None. This function is used for its side effects.
+#' @export
+updateI18nInput <- function(session = getDefaultReactiveDomain(),
+                            inputId, selected = NULL) {
+  shiny:::validate_session_object(session)
+  message <- shiny:::dropNulls(list(value = selected))
+  session$sendInputMessage(inputId, message)
+}
+
+

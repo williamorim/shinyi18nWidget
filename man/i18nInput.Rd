@@ -4,12 +4,14 @@
 \alias{i18nInput}
 \title{Create a i18nInput}
 \usage{
-i18nInput(inputId, choices)
+i18nInput(inputId, choices, selected = NULL)
 }
 \arguments{
 \item{inputId}{A character string.}
 
 \item{choices}{A character vector with language options.}
+
+\item{seleted}{A character string with the selected language.}
 }
 \description{
 Creates a widget to use alongside the shiny.i18n package.
